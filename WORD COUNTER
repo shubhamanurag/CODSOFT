@@ -1,0 +1,204 @@
+public class Student 
+{
+    private String name;
+    private int rollNumber;
+    private String grade;
+    private String email;
+
+    public Student(String name, int rollNumber, String grade, String email) 
+    {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.grade = grade;
+        this.email = email;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public int getRollNumber()
+    {
+        return rollNumber;
+    }
+
+    public void setRollNumber(int rollNumber)
+    {
+        this.rollNumber = rollNumber;
+    }
+
+    public String getGrade() 
+    {
+        return grade;
+    }
+
+    public void setGrade(String grade) 
+    {
+        this.grade = grade;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email) 
+    {
+        this.email = email;
+    }
+
+    public String toString()
+    {
+        return "Name: " + name + ", Roll Number: " + rollNumber + ", Grade: " + grade + ", Email: " + email;
+    }
+}
+
+public class StudentManagementSystem 
+{
+    private ArrayList<Student> students;
+
+    public StudentManagementSystem() 
+    {
+        students = new ArrayList<Student>();
+    }
+
+    public void addStudent(Student student)
+    {
+        students.add(student);
+    }
+
+    public void removeStudent(int rollNumber) 
+    {
+        for (int i = 0; i < students.size(); i++)
+        {
+            Student student = students.get(i);
+            if (student.getRollNumber() == rollNumber) 
+            {
+                students.remove(i);
+                break;
+            }
+        }
+    }
+
+    public Student searchStudent(String name) 
+    {
+        for (Student student : students) 
+         {
+            if (student.getName().equals(name)) 
+            {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    public void displayAllStudents()
+    {
+        for (Student student : students) 
+        {
+            System.out.println(student);
+        }
+    }
+
+}
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class StudentGUI extends JFrame implements ActionListener
+{
+    private JLabel nameLabel, rollLabel, gradeLabel, emailLabel, messageLabel;
+    private JTextField nameField, rollField, gradeField, emailField;
+    private JButton addButton, removeButton, searchButton, displayButton, saveButton, loadButton;
+    private JTable table;
+    private DefaultTableModel model;
+    private StudentManagementSystem sms;
+
+    public StudentGUI(StudentManagementSystem sms) 
+    {
+        super("Student Management System");
+        setSize(800, 600);
+
+        this.sms = sms;
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2));
+
+        nameLabel = new JLabel("Name:");
+        nameField = new JTextField();
+        inputPanel.add(nameLabel);
+        inputPanel.add(nameField);
+
+        rollLabel = new JLabel("Roll Number:");
+        rollField = new JTextField();
+        inputPanel.add(rollLabel);
+        inputPanel.add(rollField);
+
+        gradeLabel = new JLabel("Grade:");
+        gradeField = new JTextField();
+        inputPanel.add(gradeLabel);
+        inputPanel.add(gradeField);
+
+        emailLabel = new JLabel("Email:");
+        emailField = new JTextField();
+        inputPanel.add(emailLabel);
+        inputPanel.add(emailField);
+
+        messageLabel = new JLabel("");
+        messageLabel.setForeground(Color.RED);
+        inputPanel.add(messageLabel);
+
+        panel.add(inputPanel, BorderLayout.NORTH);
+        JPanel buttonPanel = new JPanel();
+
+        addButton = new JButton("Add");
+        addButton.addActionListener(this);
+        buttonPanel.add(addButton);
+
+        removeButton = new JButton("Remove");
+        removeButton.addActionListener(this);
+        buttonPanel.add(removeButton);
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(this);
+        buttonPanel.add(searchButton);
+
+        displayButton = new JButton("Display All");
+        displayButton.addActionListener(this);
+        buttonPanel.add(displayButton);
+
+        saveButton = new JButton("Save");
+        saveButton.addActionListener(this);
+        buttonPanel.add(saveButton);
+
+        loadButton = new JButton("Load");
+        loadButton.addActionListener(this);
+        buttonPanel.add(loadButton);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        model = new DefaultTableModel();
+        model.setColumnIdentifiers(new String[]{"Name", "Roll Number", "Grade", "Email"});
+        table = new JTable(model);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        add(panel);
+
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void actionPerformed(ActionEvent e)
+   {
+        
+    }
+}
