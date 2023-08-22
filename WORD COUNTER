@@ -1,0 +1,92 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+public class WordCount
+{
+    public static void main(String[] args) 
+    {
+        Scanner input = new Scanner(System.in);
+        JFileChooser fileChooser = new JFileChooser();
+        String text = "";
+
+        System.out.println("Please enter a text or provide a file name to count the words:");
+        System.out.println("Or press ENTER to select a file using the graphical user interface (GUI).");
+
+        text = input.nextLine();
+        if (text.isEmpty()) 
+        {
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) 
+            {
+                File file = fileChooser.getSelectedFile();
+                text = file.getName();
+            } 
+              else 
+              {
+                JOptionPane.showMessageDialog(null, "No file selected.");
+                System.exit(1);
+            }
+        }
+
+        if (text.endsWith(".txt"))
+        {
+            try
+            {
+                File file = new File(text);
+                Scanner fileReader = new Scanner(file);
+                text = "";
+                while (fileReader.hasNextLine()) 
+                {
+                    text += fileReader.nextLine() + "\n";
+                }
+                fileReader.close();
+            } 
+              catch (FileNotFoundException e)
+              {
+                System.out.println("File not found: " + text);
+                System.exit(1);
+            }
+        }
+
+        String[] words = text.split("[\\s,.?!:;\"()\\[\\]{}]+");
+
+        int count = 0;
+
+        ArrayList<String> uniqueWords = new ArrayList<>();
+
+        HashMap<String, Integer> wordFrequency = new HashMap<>();
+
+        for (String word : words) 
+        {
+            word = word.toLowerCase();
+            count++;
+            if (!uniqueWords.contains(word)) 
+            {
+                uniqueWords.add(word);
+            }
+            if (wordFrequency.containsKey(word)) 
+            {
+                wordFrequency.put(word, wordFrequency.get(word) + 1);
+            }
+              else 
+              {
+                wordFrequency.put(word, 1);
+              }
+        }
+
+        System.out.println("The total number of words is: " + count);
+
+        System.out.println("The number of unique words is: " + uniqueWords.size());
+
+        System.out.println("The frequency of each word is:");
+        
+        wordFrequency.entrySet().stream()
+                     .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                     .forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
+    }
+}
